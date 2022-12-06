@@ -1,0 +1,23 @@
+{
+  "name": "first-server",
+  "version": "1.0.0",
+  "description": "our first node.js server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohan1917/first-server.git"
+  },
+  "author": "rohan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rohan1917/first-server/issues"
+  },
+  "homepage": "https://github.com/rohan1917/first-server#readme",
+  "dependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
