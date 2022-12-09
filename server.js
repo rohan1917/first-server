@@ -1,59 +1,52 @@
-// server creation
+const express = require("express");
 
-const http = require("http");
+// initilisation
+const app = express();
+
+// appln will now use json format for the data transfer
+app.use(express.json());
 
 const port = 8081;
 
 const toDoList = ["Need to learn", "Need to code"];
 
-// http method
 
-// GET => getting certain details from server / default method/ n it can directly work on any browser
-// PUT => Overwrite, fully update
-// DELETE => Deleting data from server
-// PATCH =>  Update Very few fileds / certain fileds
-// POST =>Sending to the server
+// http://localhost:8081/todos
+app.get("/todos", (req, res) => {
+  res.status(200).send(toDoList);
+});
 
-http
-  .createServer((req, res) => {
-    // res.writeHead(200, { "Content-Type": "text/html" });
-    // res.write("<h4>Hello, gmail a new server</h4>");
-    // res.end();
-    const { method, url } = req;
-    //   console.log(method, url);
-    //   res.end();
-    if (url === "/todos") {
-      // http://localhost:8081/todos
-      if (method === "GET") {
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(toDoList.toString());
-      } else if (method === "POST") {
-        let body = "";
-        req.on("error", (err) => {
-          console.log(err);
-        }).on('data', (chunk) => {
-            // body = body +chunk;
-            // console.log(chunk);
-            body += chunk;
-            
-        }).on('end', () => {
-            body = JSON.parse(body);
-            console.log("body data ",body);
-        });
-      } else {
-        res.writeHead(501);
-      }
-    } else {
-      res.writeHead(404);
-    }
-    res.end();
-  })
-  .listen(port, () => {
-    console.log(`My NodeJs server started on port ${port}`);
+app.post("/todos", (req, res) => {
+  let newToDoItem = req.body.item;
+  toDoList.push(newToDoItem);
+  res.status(201).send({
+    message: "The to do got added succesfully",
   });
+});
 
-// http://localhost:8081
-// http://localhost:8081/
-// http://localhost:8081/home
-// http://localhost:8081/aboutUs
-// http://localhost:8081/contactUs
+app.delete("/todos", (req, res) => {
+  const itemToDelete = req.body.item;
+
+  toDoList.find((element, index) => {
+    if (element === itemToDelete) {
+      toDoList.splice(index, 1);
+    }
+  });
+  res.status(202).send({
+    message: `Deleted item - ${req.body.item}`,
+  });
+});
+
+app.all("/todos", (req, res) => {
+  res.status(501).send();
+});
+
+app.all("*", (req, res) => {
+  res.status(404).send();
+});
+
+// app.get("/todos/create");
+// app.get("/todos/deletd");
+app.listen(port, () => {
+  console.log(`Node js server started on ${port}`);
+});
